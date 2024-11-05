@@ -6,3 +6,5 @@ livekit-plugins-cartesia
 livekit-plugins-azure
 python-dotenv
 requests
+Flask
+livekit-api

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Agent Connection</title>
+    <!-- ... your existing head content ... -->
+    <style>
+      .connect-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .connect-button:hover {
+        background-color: #45a049;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        position: relative;
+        margin: 10% auto;
+        padding: 20px;
+        width: 300px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+        text-align: center;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+      }
+
+      .close-button:hover {
+        color: #000;
+      }
+
+      .status-message {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="connect-button" onclick="openModal()">
+      Connect to Voice Agent
+    </button>
+
+    <div id="connectionModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2>Connecting to Voice Agent</h2>
+        <div class="status-message" id="statusMessage">Initializing...</div>
+      </div>
+    </div>
+
+    <!-- Include the LiveKit SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client@1.4.1/dist/livekit-client.umd.min.js"></script>
+
+    <script>
+      const livekitURL = "wss://testvoiceagent-remvy5va.livekit.cloud";
+      const accessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGl0eSI6IiIsIm5hbWUiOiJ1c2VyXzk1OTgiLCJ2aWRlbyI6eyJyb29tQ3JlYXRlIjpmYWxzZSwicm9vbUxpc3QiOmZhbHNlLCJyb29tUmVjb3JkIjpmYWxzZSwicm9vbUFkbWluIjpmYWxzZSwicm9vbUpvaW4iOnRydWUsInJvb20iOiJ2b2ljZV9hc3Npc3RhbnRfcm9vbSIsImNhblB1Ymxpc2giOnRydWUsImNhblN1YnNjcmliZSI6dHJ1ZSwiY2FuUHVibGlzaERhdGEiOnRydWUsImNhblB1Ymxpc2hTb3VyY2VzIjpbXSwiY2FuVXBkYXRlT3duTWV0YWRhdGEiOmZhbHNlLCJpbmdyZXNzQWRtaW4iOmZhbHNlLCJoaWRkZW4iOmZhbHNlLCJyZWNvcmRlciI6ZmFsc2UsImFnZW50IjpmYWxzZX0sInNpcCI6eyJhZG1pbiI6ZmFsc2UsImNhbGwiOmZhbHNlfSwiYXR0cmlidXRlcyI6e30sIm1ldGFkYXRhIjoiIiwic2hhMjU2IjoiIiwia2luZCI6IiIsInN1YiI6InVzZXJfOTU5OCIsImlzcyI6IkFQSU5iMjlna3ZUTWNLMyIsIm5iZiI6MTczMDczNjUzMywiZXhwIjoxNzMwNzU4MTMzfQ.WfCq4BRTgR3ilvJvYhrKHzjwY3hZxBjzPkNlEVWTYqE"; // Replace with your actual token
+
+      let room; // Declare room variable globally to access it in other functions
+
+      function openModal() {
+        document.getElementById("connectionModal").style.display = "block";
+        connectToVoiceAgent();
+      }
+
+      function closeModal() {
+        document.getElementById("connectionModal").style.display = "none";
+        document.getElementById("statusMessage").textContent =
+          "Initializing...";
+        if (room) {
+          room.disconnect();
+        }
+      }
+
+      async function connectToVoiceAgent() {
+        const statusMessage = document.getElementById("statusMessage");
+
+        try {
+          statusMessage.textContent = "Connecting...";
+
+          // Create a new Room instance
+          room = new LivekitClient.Room();
+
+          // Set up event listeners before connecting
+          room
+            .on("connected", async () => {
+              await room.localParticipant.setMicrophoneEnabled(true);
+              statusMessage.textContent = "Connected to Voice Agent!";
+            })
+            .on("trackSubscribed", handleTrackSubscribed)
+            .on("trackUnsubscribed", handleTrackUnsubscribed)
+            .on("disconnected", () => {
+              statusMessage.textContent = "Disconnected from Voice Agent.";
+            })
+            .on("connectionFailed", (error) => {
+              statusMessage.textContent =
+                "Connection failed. Please try again.";
+              console.error("Connection failed:", error);
+            });
+
+          // Connect to the room
+          await room.connect(livekitURL, accessToken);
+
+          // Optional: Start local media if needed
+          // await room.localParticipant.setMicrophoneEnabled(true);
+          // await room.localParticipant.setCameraEnabled(true);
+        } catch (error) {
+          statusMessage.textContent = "Failed to connect. Please try again.";
+          console.error("Connection error:", error);
+        }
+      }
+
+      function handleTrackSubscribed(track, publication, participant) {
+        if (track.kind === LivekitClient.Track.Kind.Audio) {
+          // attach it to a new HTMLVideoElement or HTMLAudioElement
+          const element = track.attach();
+          parentElement.appendChild(element);
+        }
+      }
+
+      function handleTrackUnsubscribed(track) {
+        // remove tracks from all attached elements
+        track.detach();
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        const modal = document.getElementById("connectionModal");
+        if (event.target == modal) {
+          closeModal();
+        }
+      };
+    </script>
+  </body>
+</html>
