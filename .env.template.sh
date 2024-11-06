@@ -17,5 +17,8 @@ export DEEPGRAM_API_KEY=<your-deepgram-api-key>
 export GROQ_API_KEY=<your-groq-api-key>
 
 # Rate Limiter
-export RATE_LIMIT_MAX_REQUESTS=5
-export RATE_LIMIT_TIME_WINDOW=60
+export RATE_LIMIT_MAX_REQUESTS_RTC=5
+export RATE_LIMIT_TIME_WINDOW_RTC=60
+
+export RATE_LIMIT_MAX_REQUESTS_API=5
+export RATE_LIMIT_TIME_WINDOW_API=60

@@ -8,10 +8,10 @@ from livekit.agents.llm import ChatContext, ChatMessage
 from livekit.agents.log import logger
 from livekit.plugins import silero, deepgram, openai, cartesia
 from src.rate_limiter import RateLimiter
-from src.config import CARTESIA_API_KEY, CARTESIA_API_URL
-from typing import List, Dict, Any
+from src.config import CARTESIA_API_KEY, CARTESIA_API_URL, RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC
+from typing import List, Any
 
-rate_limiter = RateLimiter(max_requests=5, time_window=60)
+rate_limiter = RateLimiter(RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC)
 
 def prewarm(proc: JobProcess):
     if not CARTESIA_API_KEY:
@@ -42,7 +42,7 @@ def update_tts_voice(tts, voice_data: dict):
 async def entrypoint(ctx: JobContext):
     try:
         initial_ctx = ChatContext(messages=[
-            ChatMessage(role="system", content="You are an AI voice agent tasked with generating a prompt for a specific role in a conversation.")
+            ChatMessage(role="system", content="You are a professional voice assistant designed to help with daily tasks efficiently and accurately. Your main purpose is to respond in a friendly but concise manner, providing relevant information, reminders, and updates as needed. ")
         ])
         
         cartesia_voices: List[dict[str, Any]] = ctx.proc.userdata.get("cartesia_voices")
@@ -69,17 +69,14 @@ async def entrypoint(ctx: JobContext):
         @ctx.room.on("participant_attributes_changed")
         def on_participant_attributes_changed(changed_attributes: dict[str, str], participant: rtc.Participant):
             user_id = participant.identity
-            if not rate_limiter.is_allowed(user_id):
-                logger.warning(f"Rate limit exceeded for user {user_id}")
-                asyncio.create_task(agent.say("You have exceeded the rate limit. Please try again later."))
-                return
-            
+    
             if participant.kind != rtc.ParticipantKind.PARTICIPANT_KIND_STANDARD:
                 return
 
             if "voice" in changed_attributes:
                 voice_id = participant.attributes.get("voice")
                 logger.info(f"Participant {participant.identity} requested voice change: {voice_id}")
+                
                 if not voice_id:
                     return
 
@@ -93,6 +90,7 @@ async def entrypoint(ctx: JobContext):
                     if not (is_agent_speaking or is_user_speaking):
                         asyncio.create_task(agent.say("How do I sound now?", allow_interruptions=True))
 
+
         await ctx.connect()
 
         @agent.on("agent_started_speaking")
@@ -104,9 +102,18 @@ async def entrypoint(ctx: JobContext):
         def agent_stopped_speaking():
             nonlocal is_agent_speaking
             is_agent_speaking = False
-
+        
         @agent.on("user_started_speaking")
         def user_started_speaking():
+            # Check if user exceeds the rate limit
+            logger.info(f"User {ctx.room.local_participant.identity} started speaking")
+            user_id = ctx.room.local_participant.identity
+            if not rate_limiter.is_allowed(user_id):
+                logger.warning(f"Rate limit exceeded for user {user_id}")
+                
+                # Silently disconnect the participant
+                asyncio.create_task(ctx.room.disconnect())
+                return
             nonlocal is_user_speaking
             is_user_speaking = True
 
@@ -115,12 +122,14 @@ async def entrypoint(ctx: JobContext):
             nonlocal is_user_speaking
             is_user_speaking = False
 
+        
+
         voices = [{"id": voice["id"], "name": voice["name"]} for voice in cartesia_voices]
         voices.sort(key=lambda x: x["name"])
         await ctx.room.local_participant.set_attributes({"voices": json.dumps(voices)})
 
         agent.start(ctx.room)
-        await agent.say("Thank you for calling Softcery Voice Agent", allow_interruptions=True)
+        await agent.say("Thank you for calling Softcery Voice Agent. How can I help you today?", allow_interruptions=True)
     
     except Exception as e:
         logger.error(f"An error occurred in the entrypoint: {e}")
