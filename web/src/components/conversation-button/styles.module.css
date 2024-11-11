@@ -32,3 +32,8 @@
   flex-shrink: 0;
   overflow: visible;
 }
+
+.audioVisualizerContainer {
+  position: relative;
+  min-width: 33px;
+}

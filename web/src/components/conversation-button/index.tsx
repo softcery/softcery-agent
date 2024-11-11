@@ -5,6 +5,7 @@ import styles from "./styles.module.css";
 import { useTracks } from "@livekit/components-react";
 import { useMultibandTrackVolume } from "../../hooks/useTrackVolume";
 import { Loader } from "../loader";
+import { AudioVisualizer } from "../audio-visualizer";
 
 const ConversationButton = ({
   roomState,
@@ -25,6 +26,8 @@ const ConversationButton = ({
 }) => {
   const tracks = useTracks();
 
+  const barCount = 3;
+
   const handleButtonClick = () => {
     onConnect(roomState === ConnectionState.Disconnected);
   };
@@ -38,16 +41,32 @@ const ConversationButton = ({
 
   const localMultibandVolume = useMultibandTrackVolume(
     localMicTrack?.publication.track,
-    9
+    barCount
   );
 
   return (
     <button className={styles.button} onClick={handleButtonClick}>
       <div className={styles.innerContainer}>
         <PulseCircle width={40} height={40} className={styles.pulseCircle} />
-        {isLoading ? <Loader /> : <span>Start a conversation</span>}
+        {isLoading ? (
+          <Loader />
+        ) : roomState === ConnectionState.Connected ? (
+          <div className={styles.audioVisualizerContainer}>
+            <AudioVisualizer
+              state={"speaking"}
+              barWidth={8}
+              minBarHeight={8}
+              maxBarHeight={38}
+              frequencies={localMultibandVolume}
+              gap={3}
+              variant="microphone"
+            />
+          </div>
+        ) : (
+          <span>Start a conversation</span>
+        )}
       </div>
-      <MicrophoneButton source={Track.Source.Microphone} />
+      <MicrophoneButton state={roomState} source={Track.Source.Microphone} />
     </button>
   );
 };
