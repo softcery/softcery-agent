@@ -1,3 +1,4 @@
+import string
 from flask import Blueprint, jsonify, request, abort
 from config import RATE_LIMIT_MAX_REQUESTS_API, RATE_LIMIT_TIME_WINDOW_API
 from token_service import create_access_token
@@ -16,7 +17,7 @@ def get_token():
         abort(429, description="Too many requests from this IP. Please try again later.")
     
     participant_identity = f"user_{random.randint(1, 10000)}"
-    room_name = "voice_assistant_room"
+    room_name = "voice_assistant_room_" + ''.join(random.choices(string.ascii_letters + string.digits, k=8))
     participant_token = create_access_token(participant_identity, room_name)
     return jsonify({
         "token": participant_token,
