@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
-from src.api.routes import api_bp
-from src.config import API_PORT, API_ORIGINS
+from api.routes import api_bp
+from config import API_PORT, API_ORIGINS
 
 app = Flask(__name__)
 

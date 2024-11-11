@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request, abort
-from src.config import RATE_LIMIT_MAX_REQUESTS_API, RATE_LIMIT_TIME_WINDOW_API
-from src.token_service import create_access_token
+from config import RATE_LIMIT_MAX_REQUESTS_API, RATE_LIMIT_TIME_WINDOW_API
+from token_service import create_access_token
 import random
-from src.rate_limiter import RateLimiter
+from rate_limiter import RateLimiter
 
 api_bp = Blueprint('api', __name__)
 

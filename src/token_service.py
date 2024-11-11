@@ -1,5 +1,5 @@
 from livekit import api
-from src.config import LIVEKIT_API_KEY, LIVEKIT_API_SECRET
+from config import LIVEKIT_API_KEY, LIVEKIT_API_SECRET
 
 def create_access_token(identity: str, room_name: str) -> str:
     token = api.AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET) \
