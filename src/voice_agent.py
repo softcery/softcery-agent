@@ -58,7 +58,7 @@ When you receive a user input, process it as follows:
 3. Formulate a response that addresses the user's input while incorporating the relevant methodological principles.
 
 Your response should:
-- Respond with 8-12 words at a one-sentence length
+- Answer with a maximum of 8-12 words to make your dialog with the user conversational
 - Directly address the user's input
 - Incorporate at least one principle from the methodology
 - Be clear, concise, and actionable
