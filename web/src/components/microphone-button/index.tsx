@@ -1,4 +1,8 @@
-import { TrackToggleProps, useTrackToggle } from "@livekit/components-react";
+import {
+  TrackToggleProps,
+  useMaybeRoomContext,
+  useTrackToggle,
+} from "@livekit/components-react";
 import { ConnectionState, Track } from "livekit-client";
 import { MicrophoneIcon } from "../../assets/icons";
 import styles from "./styles.module.css";
@@ -8,9 +12,11 @@ export const MicrophoneButton = ({
   ...props
 }: TrackToggleProps<Track.Source.Microphone> & { state: ConnectionState }) => {
   const { buttonProps, enabled } = useTrackToggle(props);
-  const isDisabled =
-    (!enabled && state === ConnectionState.Connected) ||
-    state === ConnectionState.Connecting;
+
+  const room = useMaybeRoomContext();
+  const track = room?.localParticipant?.getTrackPublication(props.source);
+
+  const isDisabled = !enabled && track?.isEnabled;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
