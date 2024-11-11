@@ -11,7 +11,7 @@ export const MicrophoneButton = ({
   state,
   ...props
 }: TrackToggleProps<Track.Source.Microphone> & { state: ConnectionState }) => {
-  const { buttonProps, enabled } = useTrackToggle(props);
+  const { buttonProps, enabled, toggle } = useTrackToggle(props);
 
   const room = useMaybeRoomContext();
   const track = room?.localParticipant?.getTrackPublication(props.source);
@@ -20,15 +20,13 @@ export const MicrophoneButton = ({
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    if (buttonProps.onClick) {
-      buttonProps.onClick(event as any);
-    }
+    toggle();
   };
 
   return (
     <button
-      onClick={handleClick}
       {...buttonProps}
+      onClick={handleClick}
       className={`${styles.micContainer} ${isDisabled ? styles.disabled : ""}`}
     >
       <MicrophoneIcon color="#212121" width={18} height={18} />

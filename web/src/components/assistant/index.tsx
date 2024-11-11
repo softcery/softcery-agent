@@ -25,7 +25,11 @@ export default function Assistant({ onConnect, error }: AssistantProps) {
   const { state: agentState, audioTrack: agentAudioTrack } =
     useVoiceAssistant();
 
-  useSpeechLimit();
+  const feedback = useSpeechLimit(
+    Number(process.env.SPEECH_LIMIT_SECONDS),
+    Number(process.env.SPEECH_TIME_FOR_INTERRUPTION),
+    Number(process.env.TIME_TO_UNMUTE)
+  );
 
   const roomState = useConnectionState();
   const tracks = useTracks();
@@ -97,6 +101,7 @@ export default function Assistant({ onConnect, error }: AssistantProps) {
       <div className={styles.innerContainer}>
         {audioTileContent}
         {error ? <div className={styles.error}>{error}</div> : null}
+        {feedback ? <div className={styles.error}>{feedback}</div> : null}
       </div>
     </div>
   );
