@@ -1,0 +1,34 @@
+.button {
+  background-color: #212121;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  line-height: 150%;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 2px 4px 30px 0px rgba(1, 1, 1, 0.10);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.innerContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.pulseCircle {
+  stroke: rgba(242, 226, 11, 0.20);
+  filter: drop-shadow(0px 0px 26.88px rgba(242, 226, 11, 0.20));
+  flex-shrink: 0;
+  overflow: visible;
+}

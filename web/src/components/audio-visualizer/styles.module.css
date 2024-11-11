@@ -1,0 +1,38 @@
+.audioVisualizerContainer {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.audioBar {
+  transition: background-color 0.35s ease-out, height 0.15s ease-out, border-radius 0.4s ease-out;
+  border-radius: 4px;
+  background: #ededed;
+}
+
+.audioBar.ready {
+  border-radius: 100px;
+}
+
+.audioBar.center.ready {
+  background: linear-gradient(181deg, rgba(254, 241, 64, 0.05) -50.82%, #fef140 91.57%);
+}
+
+.audioBar.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

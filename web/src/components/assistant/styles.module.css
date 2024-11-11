@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+}
+
+.innerContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 50%;
+  gap: 1rem;
+  height: 100%;
+}
+
+.conversationToolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.button {
+  background-color: #212121;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  line-height: 150%;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 2px 4px 30px 0px rgba(1, 1, 1, 0.1);
+}
+
+.visualizerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 136px;
+  width: 100%;
+}
+
+.relativePosition {
+  position: relative;
+}
+
+.error {
+  color: red;
+  margin: 0 auto;
+}
+
+

@@ -5,7 +5,7 @@ import {
 } from "@livekit/components-react";
 import { useCallback } from "react";
 import { ConnectionProvider, useConnection } from "./hooks/useConnection";
-import Assistant from "./components/Assistant";
+import Assistant from "./components/assistant";
 
 export default function Home() {
   return (
