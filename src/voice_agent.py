@@ -159,7 +159,7 @@ Here is the user's input:
         await ctx.room.local_participant.set_attributes({"voices": json.dumps(voices)})
 
         agent.start(ctx.room)
-        await agent.say("Thank you for calling Softcery Voice Agent. How can I help you today?", allow_interruptions=True)
+        await agent.say("Thank you for calling Softcery Voice Agent. Let’s dive into your product idea. What unicorn are you trying to build?", allow_interruptions=True)
     
     except Exception as e:
         logger.error(f"An error occurred in the entrypoint: {e}")
