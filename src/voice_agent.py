@@ -2,13 +2,13 @@ import asyncio
 import json
 import requests
 from livekit import rtc
-from livekit.agents import JobContext, JobProcess
+from livekit.agents import JobContext, WorkerOptions, cli, JobProcess
 from livekit.agents.pipeline import VoicePipelineAgent
 from livekit.agents.llm import ChatContext, ChatMessage
 from livekit.agents.log import logger
 from livekit.plugins import silero, deepgram, openai, cartesia
-from src.rate_limiter import RateLimiter
-from src.config import CARTESIA_API_KEY, CARTESIA_API_URL, RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC
+from rate_limiter import RateLimiter
+from config import CARTESIA_API_KEY, CARTESIA_API_URL, RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC
 from typing import List, Any
 
 rate_limiter = RateLimiter(RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC)
@@ -49,7 +49,7 @@ async def entrypoint(ctx: JobContext):
         if cartesia_voices is None:
             logger.error("Cartesia voices are not available.")
             return
-
+        
         tts = cartesia.TTS(voice="829ccd10-f8b3-43cd-b8a0-4aeaa81f3b30")
         llm = openai.LLM.with_groq(model="llama3-70b-8192")
         agent = VoicePipelineAgent(
@@ -133,3 +133,7 @@ async def entrypoint(ctx: JobContext):
     
     except Exception as e:
         logger.error(f"An error occurred in the entrypoint: {e}")
+
+
+if __name__ == "__main__":
+    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint, prewarm_fnc=prewarm))
