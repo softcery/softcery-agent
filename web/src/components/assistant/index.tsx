@@ -1,4 +1,6 @@
 import {
+  MediaDeviceMenu,
+  MediaDeviceSelect,
   useConnectionState,
   useLocalParticipant,
   useTracks,
@@ -75,13 +77,25 @@ export default function Assistant({ onConnect, error }: AssistantProps) {
           />
         </div>
         <div className={styles.conversationToolbar}>
-          <ConversationButton
-            roomState={roomState}
-            onConnect={onConnect}
-            isLoading={isLoading}
-            frequencies={!agentAudioTrack ? defaultVolumes : subscribedVolumes}
+          <div
+            className={`${styles.conversationToolbarInner} ${
+              agentAudioTrack ? styles.active : ""
+            }`}
+          >
+            <ConversationButton
+              roomState={roomState}
+              onConnect={onConnect}
+              isLoading={isLoading}
+              frequencies={
+                !agentAudioTrack ? defaultVolumes : subscribedVolumes
+              }
+            />
+          </div>
+          <DisconnectButton
+            className={`${styles.disconnectButton} ${
+              agentAudioTrack ? styles.active : ""
+            }`}
           />
-          {agentAudioTrack ? <DisconnectButton /> : null}
         </div>
       </div>
     );

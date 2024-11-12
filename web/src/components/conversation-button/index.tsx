@@ -1,11 +1,11 @@
+import { useTracks } from "@livekit/components-react";
 import { ConnectionState, LocalParticipant, Track } from "livekit-client";
 import { PulseCircle } from "../../assets/icons";
+import { useMultibandTrackVolume } from "../../hooks/useTrackVolume";
+import { AudioVisualizer } from "../audio-visualizer";
+import { Loader } from "../loader";
 import { MicrophoneButton } from "../microphone-button";
 import styles from "./styles.module.css";
-import { useTracks } from "@livekit/components-react";
-import { useMultibandTrackVolume } from "../../hooks/useTrackVolume";
-import { Loader } from "../loader";
-import { AudioVisualizer } from "../audio-visualizer";
 
 const ConversationButton = ({
   roomState,
@@ -44,10 +44,16 @@ const ConversationButton = ({
     barCount
   );
 
+  const isActive =
+    roomState === ConnectionState.Connected ||
+    roomState === ConnectionState.Connecting;
+
   return (
-    <button className={styles.button} onClick={handleButtonClick}>
+    <button
+      className={`${styles.button} ${isActive ? styles.active : ""}`}
+      onClick={handleButtonClick}
+    >
       <div className={styles.innerContainer}>
-        <PulseCircle width={40} height={40} className={styles.pulseCircle} />
         {isLoading ? (
           <Loader />
         ) : roomState === ConnectionState.Connected ? (
@@ -58,15 +64,28 @@ const ConversationButton = ({
               minBarHeight={8}
               maxBarHeight={38}
               frequencies={localMultibandVolume}
-              gap={3}
+              gap={4}
               variant="microphone"
             />
           </div>
         ) : (
-          <span>Start a conversation</span>
+          <>
+            <PulseCircle
+              width={40}
+              height={40}
+              className={styles.pulseCircle}
+            />
+            <span className={styles.text}>Start a conversation</span>
+          </>
         )}
       </div>
-      <MicrophoneButton state={roomState} source={Track.Source.Microphone} />
+      <div
+        className={`${styles.microphoneButtonContainer} ${
+          isActive ? styles.active : ""
+        }`}
+      >
+        <MicrophoneButton state={roomState} source={Track.Source.Microphone} />
+      </div>
     </button>
   );
 };

@@ -17,9 +17,34 @@
 }
 
 .conversationToolbar {
+  --disconnect-button-size: 48px;
+  --toolbar-gap: 12px;
   display: flex;
-  gap: 12px;
+  gap: var(--toolbar-gap);
   align-items: center;
+  position: relative;
+}
+
+.conversationToolbarInner {
+  transition: transform 0.3s ease;
+  transform: translateX(calc(var(--toolbar-gap) + var(--disconnect-button-size) / 2));
+}
+
+.conversationToolbarInner.active {
+  transform: translateX(-calc(var(--toolbar-gap) / 2 + var(--disconnect-button-size) / 2));
+}
+
+.disconnectButton {
+  opacity: 0;
+  scale: 0.8;
+  transform: translateX(-50%);
+  transition: transform, opacity 0.3s ease;
+}
+
+.disconnectButton.active {
+  scale: 1;
+  transform: translateX(calc(var(--toolbar-gap) / 2));
+  opacity: 1;
 }
 
 .button {
