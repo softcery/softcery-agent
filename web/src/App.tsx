@@ -16,11 +16,16 @@ export default function Home() {
 }
 
 export function HomeInner() {
+  const path = window.location.pathname;
+
+  const segments = path.split('/');
+  const promptId = segments[segments.length - 1]; 
+
   const { wsUrl, token, connect, disconnect, error } = useConnection();
 
   const handleConnect = useCallback(
     async (c: boolean) => {
-      c ? connect() : disconnect();
+      c ? connect(promptId) : disconnect();
     },
     [connect, disconnect]
   );

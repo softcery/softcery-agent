@@ -10,6 +10,7 @@ from livekit.plugins import silero, deepgram, openai, cartesia
 from rate_limiter import RateLimiter
 from config import CARTESIA_API_KEY, CARTESIA_API_URL, RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC
 from typing import List, Any
+from json_reader import get_prompt_by_id
 
 rate_limiter = RateLimiter(RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC)
 
@@ -41,8 +42,17 @@ def update_tts_voice(tts, voice_data: dict):
 
 async def entrypoint(ctx: JobContext):
     try:
-        initial_ctx = ChatContext(messages=[
-            ChatMessage(role="system", content="""You are a professional voice product expert designed to help with discussing product ideas. Your role is to provide short, straightforward responses and ideas to users, adhering to a specific methodology for product development and business growth. Here's how you should operate:
+        personal_prompt = ctx.room.name
+
+        # Extract 'id' if it exists in the format "_prompt_{id}"
+        id_from_prompt = None
+        if "_prompt_" in personal_prompt:
+            id_from_prompt = personal_prompt.split("_prompt_")[-1]
+        print(id_from_prompt)
+
+        personal_prompt = get_prompt_by_id(id_from_prompt)
+
+        prompt_content = """You are a professional voice product expert designed to help with discussing product ideas. Your role is to provide short, straightforward responses and ideas to users, adhering to a specific methodology for product development and business growth. Here's how you should operate:
 
 First, review our methodology:
 1. Singular Focus: Target one specific persona (ICP). Solve one well-defined, real problem. Provide one clear, working solution. Develop one marketing/sales channel. Get PMF and $1M in YRR, then expand.
@@ -74,7 +84,15 @@ Remember to always prioritize:
 - Developing solid, user-friendly software
 
 Here is the conversation history between you and the user:
- """)
+ """
+
+        if personal_prompt:
+            prompt_content += f"\n{personal_prompt}" 
+
+        print(prompt_content)
+
+        initial_ctx = ChatContext(messages=[
+            ChatMessage(role="system", content=prompt_content)
         ])
         
         cartesia_voices: List[dict[str, Any]] = ctx.proc.userdata.get("cartesia_voices")

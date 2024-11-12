@@ -5,7 +5,7 @@ type TokenGeneratorData = {
   wsUrl?: string;
   token?: string;
   disconnect: () => Promise<void>;
-  connect: () => Promise<void>;
+  connect: (promptId: string) => Promise<void>;
   error?: string;
 };
 
@@ -25,17 +25,21 @@ export const ConnectionProvider = ({
     error?: string;
   }>({ shouldConnect: false });
 
-  const connect = useCallback(async () => {
+  const connect = useCallback(async (promptId: string) => {
     let token = "";
     let url = "";
     if (!process.env.LIVEKIT_URL) {
       throw new Error("LIVEKIT_URL is not set");
     }
     url = process.env.LIVEKIT_URL;
+
+    let requestUrl = `${process.env.VA_BACKEND_URL}/api/getToken`;
+    if (promptId) {
+      requestUrl += `?prompt_id=${encodeURIComponent(promptId)}`;
+    }
+
     try {
-      const response = await fetch(
-        `${process.env.VA_BACKEND_URL}/api/getToken`
-      );
+      const response = await fetch(requestUrl);
 
       if (response.status === 429) {
         console.log("Rate limit exceeded");
