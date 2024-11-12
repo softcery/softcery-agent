@@ -5,7 +5,7 @@ type TokenGeneratorData = {
   wsUrl?: string;
   token?: string;
   disconnect: () => Promise<void>;
-  connect: (promptId: string) => Promise<void>;
+  connect: (promptId: string | null) => Promise<void>;
   error?: string;
 };
 
@@ -25,7 +25,7 @@ export const ConnectionProvider = ({
     error?: string;
   }>({ shouldConnect: false });
 
-  const connect = useCallback(async (promptId: string) => {
+  const connect = useCallback(async (promptId: string | null) => {
     let token = "";
     let url = "";
     if (!process.env.LIVEKIT_URL) {

@@ -89,8 +89,6 @@ Here is the conversation history between you and the user:
         if personal_prompt:
             prompt_content += f"\n{personal_prompt}" 
 
-        print(prompt_content)
-
         initial_ctx = ChatContext(messages=[
             ChatMessage(role="system", content=prompt_content)
         ])

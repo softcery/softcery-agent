@@ -18,8 +18,8 @@ export default function Home() {
 export function HomeInner() {
   const path = window.location.pathname;
 
-  const segments = path.split('/');
-  const promptId = segments[segments.length - 1]; 
+  const params = new URLSearchParams(window.location.search);
+  const promptId = params.get('id');
 
   const { wsUrl, token, connect, disconnect, error } = useConnection();
 
