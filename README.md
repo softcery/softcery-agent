@@ -32,7 +32,7 @@ Voice agents are increasingly being integrated into various applications, from v
 
 Each service in this setup is accessed through RESTful or WebSocket APIs, creating a multi-step process with potential latency due to network communication and processing.
 
-![image](https://github.com/user-attachments/assets/f1466f51-c01f-424e-821e-e8c4550a1976)
+![image](https://github.com/user-attachments/assets/90f3a0d0-82a3-41cc-a61f-6dc85797cbfa)
 
 ## Features
 
