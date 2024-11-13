@@ -31,11 +31,18 @@ Voice agents are increasingly being integrated into various applications, from v
    - Providers: **Deepgram**, **Cartesia**, **Microsoft Azure Speech Synthesis**
 
 Each service in this setup is accessed through RESTful or WebSocket APIs, creating a multi-step process with potential latency due to network communication and processing.
+
+![image](https://github.com/user-attachments/assets/f1466f51-c01f-424e-821e-e8c4550a1976)
+
 ## Features
 
 - **Voice Interaction**: Engage with the application using voice commands.
 - **Rate Limiting**: Prevents abuse by limiting the number of requests per user.
 - **Real-time Audio Visualization**: Visual feedback for audio input and output.
+- **Speech-to-Text Conversion**: Utilizes Deepgram to transform spoken language into text for further processing.
+- **Text-to-Speech Synthesis**: Employs Cartesia to convert text responses into natural-sounding speech.
+- **Real-time Communication Management**: Uses LiveKit to handle real-time interactions and participant events efficiently.
+- **Advanced Language Processing**: Leverages Llama3 with OpenAI Groq for processing and generating text-based responses.
 
 ## Components
 
@@ -73,17 +80,17 @@ Each service in this setup is accessed through RESTful or WebSocket APIs, creati
 
 1. **Start the Token Server**:
    ```bash
-   python main.py #from `agent` directory
+   python main.py # from `agent` directory
    ```
 
 2. **Start Voice Agent LiveKit worker**:
    ```bash
-   python voice_agent.py dev #from `agent` directory
+   python voice_agent.py dev # from `agent` directory
    ```
 
 3. **Start the Web Client**:
    ```bash
-   npm run dev
+   npm run dev # from `web` directory
    ```
 
 ## Environment Variables
