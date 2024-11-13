@@ -12,6 +12,7 @@ from config import CARTESIA_API_KEY, CARTESIA_API_URL, RATE_LIMIT_MAX_REQUESTS_R
 from typing import List, Any
 from json_reader import get_prompt_by_id
 from assets.base_prompt import base_prompt
+from post_hog import posthogInstance
 
 rate_limiter = RateLimiter(RATE_LIMIT_MAX_REQUESTS_RTC, RATE_LIMIT_TIME_WINDOW_RTC)
 
@@ -41,8 +42,10 @@ def update_tts_voice(tts, voice_data: dict):
     tts._opts.model = model
     tts._opts.language = voice_data.get("language", "en")
 
+
 async def entrypoint(ctx: JobContext):
     try:
+        posthogInstance.capture(ctx.room.name, "user_connected")
         personal_prompt = ctx.room.name
 
         # Extract 'id' if it exists in the format "_prompt_{id}"
@@ -122,6 +125,7 @@ async def entrypoint(ctx: JobContext):
         
         @agent.on("user_started_speaking")
         def user_started_speaking():
+
             # Check if user exceeds the rate limit
             logger.info(f"User {ctx.room.local_participant.identity} started speaking")
             user_id = ctx.room.local_participant.identity
@@ -139,7 +143,11 @@ async def entrypoint(ctx: JobContext):
             nonlocal is_user_speaking
             is_user_speaking = False
 
-        
+        @agent.on("user_speech_committed")
+        def user_speech_committed(chat_ctx: ChatContext):
+            posthogInstance.capture(ctx.room.name, "user_speech_committed", properties={
+                "speech": chat_ctx.content
+            })
 
         voices = [{"id": voice["id"], "name": voice["name"]} for voice in cartesia_voices]
         voices.sort(key=lambda x: x["name"])

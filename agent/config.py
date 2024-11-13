@@ -18,3 +18,6 @@ LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 
 API_PORT = os.getenv("API_PORT", 5000)
 API_ORIGINS = os.getenv("API_ORIGINS")
+
+POSTHOG_API_KEY = os.getenv("POSTHOG_API_KEY")
+POSTHOG_HOST = os.getenv("POSTHOG_HOST")

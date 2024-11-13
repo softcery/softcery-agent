@@ -9,3 +9,4 @@ requests
 Flask
 livekit-api
 Flask-Cors
+posthog
