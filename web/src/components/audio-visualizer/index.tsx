@@ -1,5 +1,5 @@
 import { AgentState } from "@livekit/components-react";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./styles.module.css";
 
 type AgentMultibandAudioVisualizerProps = {

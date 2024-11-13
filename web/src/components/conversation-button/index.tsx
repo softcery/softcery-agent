@@ -11,7 +11,6 @@ const ConversationButton = ({
   roomState,
   onConnect,
   isLoading,
-  frequencies,
 }: {
   roomState: ConnectionState;
   onConnect: (

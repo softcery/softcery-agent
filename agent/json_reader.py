@@ -1,7 +1,7 @@
 import json
 import os
 
-def get_prompt_by_id(prompt_id, json_file_path='assets/specialized_prompts.json'):
+def get_prompt_by_id(prompt_id, json_file_path='assets/personalized_prompts.json'):
     json_path = os.path.join(os.path.dirname(__file__), json_file_path)
     
     try:

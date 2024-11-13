@@ -4,8 +4,8 @@ import {
   StartAudio,
 } from "@livekit/components-react";
 import { useCallback } from "react";
-import { ConnectionProvider, useConnection } from "./hooks/useConnection";
 import Assistant from "./components/assistant";
+import { ConnectionProvider, useConnection } from "./hooks/useConnection";
 
 export default function Home() {
   return (
@@ -16,10 +16,8 @@ export default function Home() {
 }
 
 export function HomeInner() {
-  const path = window.location.pathname;
-
   const params = new URLSearchParams(window.location.search);
-  const promptId = params.get('id');
+  const promptId = params.get("id");
 
   const { wsUrl, token, connect, disconnect, error } = useConnection();
 

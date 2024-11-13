@@ -3,8 +3,8 @@ import {
   useDisconnectButton,
 } from "@livekit/components-react";
 import React from "react";
-import styles from "./styles.module.css";
 import { XMarkIcon } from "../../assets/icons";
+import styles from "./styles.module.css";
 
 export const DisconnectButton: React.FC<DisconnectButtonProps> =
   function DisconnectButton(props: DisconnectButtonProps) {

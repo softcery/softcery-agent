@@ -1,10 +1,11 @@
-
-
 .button {
   --microphone-button-size: 40px;
   --base-button-padding: 4px;
   --inner-container-gap: 10px;
-  --padding-for-microphone-button: calc(var(--microphone-button-size) + var(--base-button-padding) + var(--inner-container-gap));
+  --padding-for-microphone-button: calc(
+    var(--microphone-button-size) + var(--base-button-padding) +
+      var(--inner-container-gap)
+  );
   --button-height: 48px;
   background-color: #212121;
   color: #fff;
@@ -15,7 +16,7 @@
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s;
-  box-shadow: 2px 4px 30px 0px rgba(1, 1, 1, 0.10);
+  box-shadow: 2px 4px 30px 0px rgba(1, 1, 1, 0.1);
   padding: var(--base-button-padding);
   padding-right: var(--padding-for-microphone-button);
   display: flex;
@@ -33,9 +34,10 @@
 .button.active {
   width: var(--small-button-width);
   padding-right: var(--base-button-padding);
-  padding-left: calc(var(--padding-for-microphone-button) - var(--inner-container-gap));
+  padding-left: calc(
+    var(--padding-for-microphone-button) - var(--inner-container-gap)
+  );
 }
-
 
 .innerContainer {
   display: flex;
@@ -50,8 +52,8 @@
 }
 
 .pulseCircle {
-  stroke: rgba(242, 226, 11, 0.20);
-  filter: drop-shadow(0px 0px 26.88px rgba(242, 226, 11, 0.20));
+  stroke: rgba(242, 226, 11, 0.2);
+  filter: drop-shadow(0px 0px 26.88px rgba(242, 226, 11, 0.2));
   flex-shrink: 0;
   overflow: visible;
 }
@@ -59,18 +61,20 @@
 .microphoneButtonContainer {
   position: absolute;
   transition: right 0.3s ease;
-  right: 4px
+  right: 4px;
 }
 
 .microphoneButtonContainer.active {
-  right: calc(var(--small-button-width) - var(--base-button-padding) - var(--microphone-button-size));
+  right: calc(
+    var(--small-button-width) - var(--base-button-padding) -
+      var(--microphone-button-size)
+  );
 }
 
 .text {
   font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
-
 }
 
 .audioVisualizerContainer {

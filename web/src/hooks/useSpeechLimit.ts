@@ -1,6 +1,6 @@
 import { useLocalParticipant } from "@livekit/components-react";
-import { useEffect, useState, useRef } from "react";
 import { ParticipantEvent } from "livekit-client";
+import { useEffect, useRef, useState } from "react";
 
 const useSpeechLimit = (
   limitInSeconds = 10,

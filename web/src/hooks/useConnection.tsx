@@ -34,6 +34,8 @@ export const ConnectionProvider = ({
     url = process.env.LIVEKIT_URL;
 
     let requestUrl = `${process.env.VA_BACKEND_URL}/api/getToken`;
+
+    // used for personalized prompts
     if (promptId) {
       requestUrl += `?prompt_id=${encodeURIComponent(promptId)}`;
     }
@@ -42,7 +44,6 @@ export const ConnectionProvider = ({
       const response = await fetch(requestUrl);
 
       if (response.status === 429) {
-        console.log("Rate limit exceeded");
         setConnectionDetails({
           ...connectionDetails,
           error: "Rate limit exceeded. Please try again later.",
@@ -55,7 +56,6 @@ export const ConnectionProvider = ({
       token = data.token;
       setConnectionDetails({ wsUrl: url, token, shouldConnect: true });
     } catch (error: any) {
-      console.log(error);
       setConnectionDetails({
         ...connectionDetails,
         error: error.message || "Something went wrong",
