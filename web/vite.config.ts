@@ -15,6 +15,8 @@ export default defineConfig({
       SPEECH_LIMIT_SECONDS: process.env.SPEECH_LIMIT_SECONDS || "",
       SPEECH_TIME_FOR_INTERRUPTION: process.env.SPEECH_TIME_FOR_INTERRUPTION || "",
       TIME_TO_UNMUTE: process.env.TIME_TO_UNMUTE || "",
+      POSTHOG_API_KEY: process.env.POSTHOG_API_KEY || "",
+      POSTHOG_HOST: process.env.POSTHOG_HOST || "",
     }),
   ],
 });

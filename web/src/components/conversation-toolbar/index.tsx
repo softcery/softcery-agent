@@ -1,14 +1,16 @@
 import {
   useConnectionState,
+  useRoomInfo,
   useVoiceAssistant,
 } from "@livekit/components-react";
 import { ConnectionState } from "livekit-client";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { AudioVisualizer } from "../audio-visualizer";
 import ConversationButton from "../conversation-button";
 import { DisconnectButton } from "../disconnect-button";
 import styles from "./styles.module.css";
 import { useMultibandTrackVolume } from "../../hooks/useTrackVolume";
+import { usePostHog } from "posthog-js/react";
 
 const BAR_COUNT = 5;
 const DEFAULT_VOLUMES = Array.from({ length: BAR_COUNT }, () => [0.0]);
@@ -18,8 +20,19 @@ export const ConversationToolbar = ({
 }: {
   onConnect: (connect: boolean, opts?: { token: string; url: string }) => void;
 }) => {
+  const posthog = usePostHog();
   const { state: agentState, audioTrack: agentAudioTrack } =
     useVoiceAssistant();
+
+  const { name: roomName } = useRoomInfo();
+
+  useEffect(() => {
+    if (roomName) {
+      posthog.identify(roomName, {
+        id: roomName,
+      });
+    }
+  }, [roomName]);
 
   const roomState = useConnectionState();
 

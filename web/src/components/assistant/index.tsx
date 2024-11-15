@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import useSpeechLimit from "../../hooks/useSpeechLimit";
 import { ConversationToolbar } from "../conversation-toolbar";
 import styles from "./styles.module.css";
+import { usePostHog } from "posthog-js/react";
 
 export interface AssistantProps {
   onConnect: (connect: boolean, opts?: { token: string; url: string }) => void;
@@ -15,7 +16,6 @@ export interface AssistantProps {
 
 export default function Assistant({ onConnect, error }: AssistantProps) {
   const { localParticipant } = useLocalParticipant();
-
   const feedback = useSpeechLimit(
     Number(process.env.SPEECH_LIMIT_SECONDS),
     Number(process.env.SPEECH_TIME_FOR_INTERRUPTION),
